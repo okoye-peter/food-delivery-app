@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yummy/routing/routes.dart';
+import 'package:yummy/ui/core/themes/app_theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,9 +15,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'Yummy',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.white),
-      ),
+      themeMode: ThemeMode.system,
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
       routerConfig: routes,
     );
   }

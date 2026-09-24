@@ -69,6 +69,7 @@ flutter:
     - assets/images/onboarding/
     - assets/icons/
     - assets/svg/onboarding/
+    - assets/images/authentication/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -98,12 +99,18 @@ flutter:
 
 flutter_native_splash:
   color: "#FFFFFF"
+  color_dark: "#2B2A32"
   image: assets/images/splash_icon.png
   fullscreen: true
+  image_dark: assets/images/dark_splash_icon.png
 
   android_12:
     image: assets/images/splash_icon_android12.png
+    color: "#FFFFFF"
     icon_background_color: "#FFFFFF"
+    image_dark: assets/images/splash_icon_android12_dark.png
+    color_dark: "#2B2A32"
+    icon_background_color_dark: "#2B2A32"
 
 flutter_launcher_icons:
   android: true
