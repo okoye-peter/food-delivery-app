@@ -22,8 +22,7 @@ class OnboardingFooter extends StatelessWidget {
   static const _activeDotColor = Color.fromARGB(255, 254, 161, 89);
 
   double get _page {
-    if (!pageController.hasClients ||
-        !pageController.position.haveDimensions) {
+    if (!pageController.hasClients || !pageController.position.haveDimensions) {
       return pageController.initialPage.toDouble();
     }
     return pageController.page ?? 0;
@@ -89,9 +88,7 @@ class OnboardingFooter extends StatelessWidget {
                   Row(
                     children: [
                       for (var dot = 0; dot < pages.length; dot++)
-                        _buildDot(
-                          (1 - (page - dot).abs()).clamp(0.0, 1.0),
-                        ),
+                        _buildDot((1 - (page - dot).abs()).clamp(0.0, 1.0)),
                     ],
                   ),
                   IconButton.filled(

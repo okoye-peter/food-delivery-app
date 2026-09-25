@@ -1,8 +1,12 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:yummy/routing/route_path.dart';
 import 'package:yummy/ui/core/themes/app_colors.dart';
+import 'package:yummy/ui/core/widgets/curved_bottom_clipper.dart';
+import 'package:yummy/ui/core/widgets/labeled_text_field.dart';
 
 class SignInScreen extends StatefulWidget {
   const new({super.key});
@@ -12,19 +16,42 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  static const _maxContentWidth = 480.0;
+  static final _emailRegex = RegExp(r'^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$');
+
+  final _emailInputController = TextEditingController();
+  final _passwordInputController = TextEditingController();
+  bool _isPasswordObscure = true;
+  bool _isRememberMeCheck = false;
+
+  @override
+  void dispose() {
+    _emailInputController.dispose();
+    _passwordInputController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    bool isPasswordObscure = true;
-    bool isRememberMeCheck = false;
-
     final topPadding = MediaQuery.paddingOf(context).top;
     final bottomPadding = MediaQuery.paddingOf(context).bottom;
     final screenHeight = MediaQuery.heightOf(context);
     final screenWidth = MediaQuery.widthOf(context);
 
-    final emailInputController = TextEditingController();
-    final passwordInputController = TextEditingController();
-    final emailRegex = RegExp(r'^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$');
+    // Header scales with the screen but always leaves room for the title
+    // (short landscape screens) and stops growing on tall tablets.
+    final headerHeight = math.max(
+      topPadding + 140,
+      math.min(screenHeight * 0.27, 300.0),
+    );
+    final contentWidth = math.min(screenWidth, _maxContentWidth);
+    final imageWidth = math.min(
+      (contentWidth * 0.5).clamp(140.0, 260.0),
+      headerHeight,
+    );
+    // On tall screens keep the buttons grouped with the form instead of
+    // pushing them to the bottom edge.
+    final isTallScreen = screenHeight > 900;
 
     return Scaffold(
       body: CustomScrollView(
@@ -37,10 +64,10 @@ class _SignInScreenState extends State<SignInScreen> {
                 Stack(
                   children: [
                     ClipPath(
-                      clipper: const _CurvedBottomClipper(curveDepth: 25),
+                      clipper: const CurvedBottomClipper(curveDepth: 25),
                       child: Container(
                         width: double.infinity,
-                        height: screenHeight * 0.27,
+                        height: headerHeight,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.centerLeft,
@@ -52,45 +79,54 @@ class _SignInScreenState extends State<SignInScreen> {
                             stops: [0.05, 0.75],
                           ),
                         ),
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              top: topPadding + 45,
-                              left: 15,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Sign in',
-                                    style: GoogleFonts.lato(
-                                      color: context.colors.title,
-                                      fontSize: 36,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-
-                                  Text(
-                                    'Welcome to yummy!',
-                                    style: GoogleFonts.lato(
-                                      color: context.colors.subtitle,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                        child: Center(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(
+                              maxWidth: _maxContentWidth,
                             ),
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Positioned(
+                                  top: topPadding + 45,
+                                  left: 15,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Sign in',
+                                        style: GoogleFonts.lato(
+                                          color: context.colors.title,
+                                          fontSize: 36,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
 
-                            Positioned(
-                              top: topPadding + 15,
-                              right: -28,
-                              child: Image.asset(
-                                'assets/images/authentication/sign in food.png',
-                                width: 210,
-                              ),
+                                      Text(
+                                        'Welcome to yummy!',
+                                        style: GoogleFonts.lato(
+                                          color: context.colors.subtitle,
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Positioned(
+                                  top: topPadding + 15,
+                                  right: -28,
+                                  child: Image.asset(
+                                    'assets/images/authentication/sign in food.png',
+                                    width: imageWidth,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
@@ -98,167 +134,219 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 const SizedBox(height: 30),
                 Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(15, 0, 15, bottomPadding + 20),
-                    child: Form(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Email Address',
-                            style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFFA4A7AD),
-                              fontSize: 15,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: emailInputController,
-                            keyboardType: TextInputType.emailAddress,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xFFEFF0F3),
-                                ),
-                              ),
-                              hint: Text(
-                                'Enter your email address',
-                                style: GoogleFonts.inter(
-                                  color: Color(0xFF585D63),
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                            validator: (String? value) {
-                              if (value == null || value.trim().isEmpty)
-                                return 'Email is required';
-
-                              if (!emailRegex.hasMatch(value.trim()))
-                                return 'Invalid Email';
-
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 35),
-                          Text(
-                            'Password',
-                            style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFFA4A7AD),
-                              fontSize: 15,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: passwordInputController,
-                            textInputAction: TextInputAction.done,
-                            obscureText: isPasswordObscure,
-                            enableSuggestions: false,
-                            decoration: InputDecoration(
-                              suffixIcon: IconButton(
-                                onPressed: () => setState(
-                                  () => isPasswordObscure = !isPasswordObscure,
-                                ),
-                                icon: Icon(
-                                  isPasswordObscure
-                                      ? Icons.visibility_off_outlined
-                                      : Icons.visibility_outlined,
-                                  color: Color(0xFF313337),
-                                ),
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xFFEFF0F3),
-                                ),
-                              ),
-                              hint: Text(
-                                'Enter your password',
-                                style: GoogleFonts.inter(
-                                  color: Color(0xFF585D63),
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                            validator: (String? value) {
-                              if (value == null || value.trim().isEmpty)
-                                return 'Password is required';
-
-                              return null;
-                            },
-                          ),
-
-                          const SizedBox(height: 15),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxWidth: _maxContentWidth,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(
+                          15,
+                          0,
+                          15,
+                          bottomPadding + 20,
+                        ),
+                        child: Form(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              GestureDetector(
-                                onTap: () => setState(
-                                  () => isRememberMeCheck = !isRememberMeCheck,
+                              LabeledTextField(
+                                label: 'Email Address',
+                                hintText: 'Enter your email address',
+                                controller: _emailInputController,
+                                keyboardType: TextInputType.emailAddress,
+                                textInputAction: TextInputAction.next,
+                                validator: (String? value) {
+                                  if (value == null || value.trim().isEmpty)
+                                    return 'Email is required';
+
+                                  if (!_emailRegex.hasMatch(value.trim()))
+                                    return 'Invalid Email';
+
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 35),
+                              LabeledTextField(
+                                label: 'Password',
+                                hintText: 'Enter your password',
+                                controller: _passwordInputController,
+                                textInputAction: TextInputAction.done,
+                                obscureText: _isPasswordObscure,
+                                enableSuggestions: false,
+                                suffixIcon: IconButton(
+                                  onPressed: () => setState(
+                                    () => _isPasswordObscure =
+                                        !_isPasswordObscure,
+                                  ),
+                                  icon: Icon(
+                                    _isPasswordObscure
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined,
+                                    color: context.colors.inputText,
+                                  ),
                                 ),
-                                child: Row(
+                                validator: (String? value) {
+                                  if (value == null || value.trim().isEmpty)
+                                    return 'Password is required';
+
+                                  return null;
+                                },
+                              ),
+
+                              const SizedBox(height: 15),
+
+                              SizedBox(
+                                width: double.infinity,
+                                child: Wrap(
+                                  alignment: WrapAlignment.spaceBetween,
+                                  crossAxisAlignment: WrapCrossAlignment.center,
                                   children: [
-                                    Checkbox(
-                                      value: isRememberMeCheck,
-                                      onChanged: (bool? value) => setState(
-                                        () =>
-                                            isRememberMeCheck = value ?? false,
+                                    GestureDetector(
+                                      onTap: () => setState(
+                                        () => _isRememberMeCheck =
+                                            !_isRememberMeCheck,
                                       ),
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                      visualDensity: const VisualDensity(
-                                        horizontal: -4,
-                                        vertical: -4,
-                                      ),
-                                      side: BorderSide(
-                                        color: Color(0xFFA4A7AD),
-                                        width: 2,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(6),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Checkbox(
+                                            value: _isRememberMeCheck,
+                                            onChanged: (bool? value) =>
+                                                setState(
+                                                  () => _isRememberMeCheck =
+                                                      value ?? false,
+                                                ),
+                                            materialTapTargetSize:
+                                                MaterialTapTargetSize
+                                                    .shrinkWrap,
+                                            visualDensity: const VisualDensity(
+                                              horizontal: -4,
+                                              vertical: -4,
+                                            ),
+                                            side: BorderSide(
+                                              color: context.colors.bodyText,
+                                              width: 2,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            'Remember me',
+                                            style: GoogleFonts.inter(
+                                              color: context.colors.bodyText,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      'Remember me',
-                                      style: GoogleFonts.inter(
-                                        color: Color(0xFFA4A7AD),
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
+
+                                    TextButton(
+                                      onPressed: () => context.push(
+                                        AppRoutes.forgotPassword,
+                                      ),
+                                      child: Text(
+                                        'Forgot Password?',
+                                        style: GoogleFonts.inter(
+                                          color: context.colors.link,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
 
-                              /**
-                         * TODO fix the forgot password
-                         */
-                              TextButton(
-                                onPressed: () {},
-                                child: Text(
-                                  'Forgot Password?',
-                                  style: GoogleFonts.inter(
-                                    color: Color(0xFF3A72D6),
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
+                              isTallScreen
+                                  ? const SizedBox(height: 40)
+                                  : const Spacer(),
+
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                        alignment: Alignment.center,
+                                        backgroundColor:
+                                            context.colors.facebookButton,
+                                        minimumSize: const Size(
+                                          double.infinity,
+                                          60,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: () {},
+                                      label: Text(
+                                        'Facebook',
+                                        style: GoogleFonts.inter(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      icon: Icon(
+                                        Icons.facebook,
+                                        color: Colors.white,
+                                        size: 28,
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  const SizedBox(width: 20),
+                                  Expanded(
+                                    child: ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                        alignment: Alignment.center,
+                                        backgroundColor:
+                                            context.colors.appleButton,
+                                        minimumSize: const Size(
+                                          double.infinity,
+                                          60,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: () {},
+                                      label: Text(
+                                        'Apple',
+                                        style: GoogleFonts.inter(
+                                          color: context.colors.onAppleButton,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      icon: Icon(
+                                        Icons.apple,
+                                        color: context.colors.onAppleButton,
+                                        size: 28,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
 
-                          const Spacer(),
+                              const SizedBox(height: 20),
 
-                          Row(
-                            children: [
-                              Expanded(
-                                child: ElevatedButton.icon(
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    alignment: Alignment.center,
-                                    backgroundColor: Color(0xFF3A72D6),
+                                    backgroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .primary,
                                     minimumSize: const Size(
                                       double.infinity,
                                       60,
@@ -266,118 +354,65 @@ class _SignInScreenState extends State<SignInScreen> {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
-                                  ),
-                                  onPressed: () {},
-                                  label: Text(
-                                    'Facebook',
-                                    style: GoogleFonts.inter(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  icon: Icon(
-                                    Icons.facebook,
-                                    color: Colors.white,
-                                    size: 28,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 20),
-                              Expanded(
-                                child: ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
                                     alignment: Alignment.center,
-                                    backgroundColor: Color(0xFF313337),
-                                    minimumSize: const Size(
-                                      double.infinity,
-                                      60,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
                                   ),
                                   onPressed: () {},
-                                  label: Text(
-                                    'Apple',
+                                  child: Text(
+                                    'Sign in',
                                     style: GoogleFonts.inter(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                      fontWeight: FontWeight(650),
+                                      fontSize: 16,
                                     ),
                                   ),
-                                  icon: Icon(
-                                    Icons.apple,
-                                    color: Colors.white,
-                                    size: 28,
-                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 15),
+                              Center(
+                                child: Wrap(
+                                  alignment: WrapAlignment.center,
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Do not have an account?',
+                                      style: GoogleFonts.inter(
+                                        color: context.colors.mutedText,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    /**
+                                   * TODO: add the route
+                                   */
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 0,
+                                        ),
+                                        minimumSize: Size.zero,
+                                        tapTargetSize:
+                                            MaterialTapTargetSize.shrinkWrap,
+                                      ),
+                                      onPressed: () =>
+                                          context.push(AppRoutes.signUp),
+                                      child: Text(
+                                        'Sign up',
+                                        style: GoogleFonts.inter(
+                                          color: context.colors.link,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
-
-                          const SizedBox(height: 20),
-
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFFFEA159),
-                                minimumSize: const Size(double.infinity, 60),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                alignment: Alignment.center,
-                              ),
-                              onPressed: () {},
-                              child: Text(
-                                'Sign in',
-                                style: GoogleFonts.inter(
-                                  color: Color(0xFF313337),
-                                  fontWeight: FontWeight(650),
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Do not have an account?',
-                                style: GoogleFonts.inter(
-                                  color: Color(0xFF8F8F8F),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              const SizedBox(width: 6),
-                              /**
-                                 * TODO: add the route
-                                 */
-                              TextButton(
-                                style: TextButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 0,
-                                  ),
-                                  minimumSize: Size.zero,
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                ),
-                                onPressed: () => context.push(AppRoutes.signUp),
-                                child: Text(
-                                  'Sign up',
-                                  style: GoogleFonts.inter(
-                                    color: Color(0xFF3A72D6),
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
@@ -389,30 +424,4 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
   }
-}
-
-class _CurvedBottomClipper extends CustomClipper<Path> {
-  const _CurvedBottomClipper({required this.curveDepth});
-
-  final double curveDepth;
-
-  @override
-  Path getClip(Size size) {
-    final w = size.width;
-    final h = size.height;
-    final top = h - curveDepth;
-    // Control points pulled in from the edges so the curve leaves the sides
-    // at an angle (no bend) while staying flat through the middle.
-    final controlY = h + curveDepth / 3;
-
-    return Path()
-      ..lineTo(0, top)
-      ..cubicTo(w * 0.2, controlY, w * 0.8, controlY, w, top)
-      ..lineTo(w, 0)
-      ..close();
-  }
-
-  @override
-  bool shouldReclip(_CurvedBottomClipper oldClipper) =>
-      oldClipper.curveDepth != curveDepth;
 }

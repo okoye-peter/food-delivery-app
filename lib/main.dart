@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:yummy/routing/routes.dart';
 import 'package:yummy/ui/core/themes/app_theme.dart';
+import 'package:flutter/services.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
   runApp(const MyApp());
 }
 

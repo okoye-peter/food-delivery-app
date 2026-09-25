@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import 'app_colors.dart';
 
 // Brand amber (same as the onboarding next button). Seeding from white made
 // Flutter fall back to a teal palette for buttons, fields and checkboxes.
 const _brandAmber = Color(0xFFFEA159);
-const _onBrandAmber = Color(0xFF2B2A32); // dark text on amber buttons, as in the design
+const _onBrandAmber = Color(
+  0xFF2B2A32,
+); // dark text on amber buttons, as in the design
 const _darkBackground = Color(0xFF2B2A32);
+
+InputDecorationTheme _inputDecorationTheme(AppColors colors) =>
+    InputDecorationTheme(
+      enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: colors.inputBorder),
+      ),
+      hintStyle: GoogleFonts.inter(
+        color: colors.inputHint,
+        fontWeight: FontWeight.w600,
+      ),
+    );
 
 class AppTheme {
   static final light = ThemeData(
@@ -24,6 +39,7 @@ class AppTheme {
       surfaceContainerHigh: const Color(0xFFEDEDF0),
       surfaceContainerHighest: const Color(0xFFE7E7EB),
     ),
+    inputDecorationTheme: _inputDecorationTheme(AppColors.light),
     extensions: const [AppColors.light],
   );
 
@@ -35,7 +51,8 @@ class AppTheme {
       brightness: Brightness.dark,
       primary: _brandAmber,
       onPrimary: _onBrandAmber,
-      surface: _darkBackground, // cards, sheets, dialogs, app bar match the page
+      surface:
+          _darkBackground, // cards, sheets, dialogs, app bar match the page
       // Steps up from #2B2A32 so raised surfaces read as lighter, not brown
       surfaceContainerLowest: const Color(0xFF242329),
       surfaceContainerLow: const Color(0xFF302F37),
@@ -43,6 +60,7 @@ class AppTheme {
       surfaceContainerHigh: const Color(0xFF3B3A43),
       surfaceContainerHighest: const Color(0xFF42414A),
     ),
+    inputDecorationTheme: _inputDecorationTheme(AppColors.dark),
     extensions: const [AppColors.dark],
   );
 }

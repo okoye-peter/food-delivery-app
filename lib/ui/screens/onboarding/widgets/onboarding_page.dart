@@ -3,10 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:yummy/data/models/onboarding_page_data.dart';
 
 class OnboardingPage extends StatelessWidget {
-  const OnboardingPage({
-    super.key,
-    required this.data,
-  });
+  const OnboardingPage({super.key, required this.data});
 
   final OnboardingPageData data;
 
@@ -57,7 +54,6 @@ class OnboardingPage extends StatelessWidget {
             right: data.accentBadgeRight,
             child: data.accentBadgeBuilder(context),
           ),
-
         ],
       ),
     );
