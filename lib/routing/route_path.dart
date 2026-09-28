@@ -7,4 +7,5 @@ class AppRoutes {
   static String  forgotPassword = '/forgot-password';
   static String  verifyCode = '/forgot-password/verify';
   static String  resetPassword = '/forgot-password/reset';
+  static String  dashboard = '/dashboard';
 }

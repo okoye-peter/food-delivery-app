@@ -16,6 +16,16 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.facebookButton,
     required this.appleButton,
     required this.onAppleButton,
+    required this.searchFill,
+    required this.searchIcon,
+    required this.searchHint,
+    required this.cardBackground,
+    required this.sectionTitle,
+    required this.sectionSubtitle,
+    required this.timerFill,
+    required this.onTimerFill,
+    required this.timerSeparator,
+    required this.chevron,
   });
 
   final Color headerBlue;
@@ -32,6 +42,16 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color facebookButton;
   final Color appleButton;
   final Color onAppleButton;
+  final Color searchFill;
+  final Color searchIcon;
+  final Color searchHint;
+  final Color cardBackground;
+  final Color sectionTitle;
+  final Color sectionSubtitle;
+  final Color timerFill;
+  final Color onTimerFill;
+  final Color timerSeparator;
+  final Color chevron;
 
   static const light = AppColors(
     headerBlue: Color(0x4D7ABEEB),
@@ -48,6 +68,16 @@ class AppColors extends ThemeExtension<AppColors> {
     facebookButton: Color(0xFF3A72D6),
     appleButton: Color(0xFF313337),
     onAppleButton: Colors.white,
+    searchFill: Color(0xFFEFF0F3),
+    searchIcon: Color(0xFF313337),
+    searchHint: Color(0xFF70747C),
+    cardBackground: Colors.white,
+    sectionTitle: Color(0xFF313337),
+    sectionSubtitle: Color(0xFF585D63),
+    timerFill: Color(0xFF313337),
+    onTimerFill: Colors.white,
+    timerSeparator: Color(0xFF313337),
+    chevron: Color(0xFFA4A7AD),
   );
 
   static const dark = AppColors(
@@ -70,6 +100,16 @@ class AppColors extends ThemeExtension<AppColors> {
     // Apple's guideline: white button on dark backgrounds
     appleButton: Colors.white,
     onAppleButton: Colors.black,
+    searchFill: Color(0xFF1C1B21),
+    searchIcon: Color(0xFFD7D7D8),
+    searchHint: Color(0xFFA4A7AD),
+    cardBackground: Color(0xFF43414E),
+    sectionTitle: Color(0xFFF9FAFB),
+    sectionSubtitle: Color(0xFF70747C),
+    timerFill: Color(0xFFF9FAFB),
+    onTimerFill: Color(0xFF313337),
+    timerSeparator: Color(0xFFA4A7AD),
+    chevron: Color(0xFF70747C),
   );
 
   @override
@@ -88,6 +128,16 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? facebookButton,
     Color? appleButton,
     Color? onAppleButton,
+    Color? searchFill,
+    Color? searchIcon,
+    Color? searchHint,
+    Color? cardBackground,
+    Color? sectionTitle,
+    Color? sectionSubtitle,
+    Color? timerFill,
+    Color? onTimerFill,
+    Color? timerSeparator,
+    Color? chevron,
   }) => AppColors(
     headerBlue: headerBlue ?? this.headerBlue,
     headerYellow: headerYellow ?? this.headerYellow,
@@ -103,6 +153,16 @@ class AppColors extends ThemeExtension<AppColors> {
     facebookButton: facebookButton ?? this.facebookButton,
     appleButton: appleButton ?? this.appleButton,
     onAppleButton: onAppleButton ?? this.onAppleButton,
+    searchFill: searchFill ?? this.searchFill,
+    searchIcon: searchIcon ?? this.searchIcon,
+    searchHint: searchHint ?? this.searchHint,
+    cardBackground: cardBackground ?? this.cardBackground,
+    sectionTitle: sectionTitle ?? this.sectionTitle,
+    sectionSubtitle: sectionSubtitle ?? this.sectionSubtitle,
+    timerFill: timerFill ?? this.timerFill,
+    onTimerFill: onTimerFill ?? this.onTimerFill,
+    timerSeparator: timerSeparator ?? this.timerSeparator,
+    chevron: chevron ?? this.chevron,
   );
 
   @override
@@ -123,6 +183,16 @@ class AppColors extends ThemeExtension<AppColors> {
       facebookButton: Color.lerp(facebookButton, other.facebookButton, t)!,
       appleButton: Color.lerp(appleButton, other.appleButton, t)!,
       onAppleButton: Color.lerp(onAppleButton, other.onAppleButton, t)!,
+      searchFill: Color.lerp(searchFill, other.searchFill, t)!,
+      searchIcon: Color.lerp(searchIcon, other.searchIcon, t)!,
+      searchHint: Color.lerp(searchHint, other.searchHint, t)!,
+      cardBackground: Color.lerp(cardBackground, other.cardBackground, t)!,
+      sectionTitle: Color.lerp(sectionTitle, other.sectionTitle, t)!,
+      sectionSubtitle: Color.lerp(sectionSubtitle, other.sectionSubtitle, t)!,
+      timerFill: Color.lerp(timerFill, other.timerFill, t)!,
+      onTimerFill: Color.lerp(onTimerFill, other.onTimerFill, t)!,
+      timerSeparator: Color.lerp(timerSeparator, other.timerSeparator, t)!,
+      chevron: Color.lerp(chevron, other.chevron, t)!,
     );
   }
 }

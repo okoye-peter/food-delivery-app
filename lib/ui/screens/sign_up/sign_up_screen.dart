@@ -174,11 +174,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 keyboardType: TextInputType.text,
                                 textInputAction: TextInputAction.next,
                                 validator: (String? value) {
-                                  if (value == null || value.trim().isEmpty)
+                                  if (value == null || value.trim().isEmpty) {
                                     return 'full anme is required';
+                                  }
 
-                                  if (!_emailRegex.hasMatch(value.trim()))
+                                  if (!_emailRegex.hasMatch(value.trim())) {
                                     return 'Invalid full anme';
+                                  }
 
                                   return null;
                                 },
@@ -191,11 +193,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 keyboardType: TextInputType.emailAddress,
                                 textInputAction: TextInputAction.next,
                                 validator: (String? value) {
-                                  if (value == null || value.trim().isEmpty)
+                                  if (value == null || value.trim().isEmpty) {
                                     return 'Email is required';
+                                  }
 
-                                  if (!_emailRegex.hasMatch(value.trim()))
+                                  if (!_emailRegex.hasMatch(value.trim())) {
                                     return 'Invalid Email';
+                                  }
 
                                   return null;
                                 },
@@ -240,8 +244,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   ),
                                 ),
                                 validator: (String? value) {
-                                  if (value == null || value.trim().isEmpty)
+                                  if (value == null || value.trim().isEmpty) {
                                     return 'Password is required';
+                                  }
 
                                   return null;
                                 },

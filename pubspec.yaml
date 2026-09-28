@@ -41,7 +41,6 @@ dependencies:
   flutter_svg: ^2.2.1
   google_fonts: ^8.2.1
   phone_numbers_parser: ^9.0.26
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -68,9 +67,14 @@ flutter:
   assets:
     - assets/images/
     - assets/images/onboarding/
-    - assets/icons/
-    - assets/svg/onboarding/
     - assets/images/authentication/
+    - assets/images/dashboard/
+    - assets/images/dashboard/categories/
+    - assets/svg/onboarding/
+    - assets/svg/dashboard/
+    - assets/icons/
+    - assets/images/dummy/food_images/
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

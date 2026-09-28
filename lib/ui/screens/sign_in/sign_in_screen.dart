@@ -158,11 +158,13 @@ class _SignInScreenState extends State<SignInScreen> {
                                 keyboardType: TextInputType.emailAddress,
                                 textInputAction: TextInputAction.next,
                                 validator: (String? value) {
-                                  if (value == null || value.trim().isEmpty)
+                                  if (value == null || value.trim().isEmpty) {
                                     return 'Email is required';
+                                  }
 
-                                  if (!_emailRegex.hasMatch(value.trim()))
+                                  if (!_emailRegex.hasMatch(value.trim())) {
                                     return 'Invalid Email';
+                                  }
 
                                   return null;
                                 },
@@ -188,8 +190,9 @@ class _SignInScreenState extends State<SignInScreen> {
                                   ),
                                 ),
                                 validator: (String? value) {
-                                  if (value == null || value.trim().isEmpty)
+                                  if (value == null || value.trim().isEmpty) {
                                     return 'Password is required';
+                                  }
 
                                   return null;
                                 },
@@ -356,7 +359,9 @@ class _SignInScreenState extends State<SignInScreen> {
                                     ),
                                     alignment: Alignment.center,
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    context.go(AppRoutes.dashboard);
+                                  },
                                   child: Text(
                                     'Sign in',
                                     style: GoogleFonts.inter(
@@ -384,9 +389,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                       ),
                                     ),
                                     const SizedBox(width: 6),
-                                    /**
-                                   * TODO: add the route
-                                   */
+
                                     TextButton(
                                       style: TextButton.styleFrom(
                                         padding: const EdgeInsets.symmetric(

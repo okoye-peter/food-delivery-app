@@ -3,6 +3,7 @@ import 'package:yummy/routing/route_path.dart';
 import 'package:yummy/ui/screens/forgot_password/forgot_password_screen.dart';
 import 'package:yummy/ui/screens/forgot_password/reset_password_screen.dart';
 import 'package:yummy/ui/screens/forgot_password/verify_code_screen.dart';
+import 'package:yummy/ui/screens/home/home_screen.dart';
 import 'package:yummy/ui/screens/onboarding/onboarding_screen.dart';
 import 'package:yummy/ui/screens/sign_in/sign_in_screen.dart';
 import 'package:yummy/ui/screens/sign_up/sign_up_screen.dart';
@@ -37,6 +38,12 @@ final routes = GoRouter(
         email: state.uri.queryParameters['email'] ?? '',
         code: state.uri.queryParameters['code'] ?? '',
       ),
+    ),
+
+    // requires auth
+    GoRoute(
+      path: AppRoutes.dashboard,
+      builder: (context, state) => HomeScreen(),
     ),
   ],
 );

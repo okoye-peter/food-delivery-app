@@ -83,11 +83,13 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   ),
                 ),
                 validator: (String? value) {
-                  if (value == null || value.isEmpty)
+                  if (value == null || value.isEmpty) {
                     return 'Password is required';
+                  }
 
-                  if (value.length < _minPasswordLength)
+                  if (value.length < _minPasswordLength) {
                     return 'Password must be at least $_minPasswordLength characters';
+                  }
 
                   return null;
                 },
@@ -108,11 +110,13 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   ),
                 ),
                 validator: (String? value) {
-                  if (value == null || value.isEmpty)
+                  if (value == null || value.isEmpty) {
                     return 'Please confirm your password';
+                  }
 
-                  if (value != _passwordInputController.text)
+                  if (value != _passwordInputController.text) {
                     return 'Passwords do not match';
+                  }
 
                   return null;
                 },
