@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:yummy/data/dummy_data/data.dart';
 import 'package:yummy/data/repositories/category_repository.dart';
+import 'package:yummy/routing/route_path.dart';
 import 'package:yummy/ui/screens/home/widgets/home_app_bar.dart';
 import 'package:yummy/ui/screens/home/widgets/home_categories.dart';
 import 'package:yummy/ui/screens/home/widgets/home_nearby_products.dart';
@@ -19,21 +21,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   static const _sectionGap = SizedBox(height: 20);
 
-  // TODO: load the user's saved addresses
-  final _savedAddresses = [
-    '92 Hang Trong',
-    '14 Ly Thuong Kiet',
-    '7 Trang Tien',
-  ];
-  late String _deliveryAddress = _savedAddresses.first;
+  // TODO: load the user's selected address
+  String _deliveryAddress = '92 Hang Trong';
 
   final _categories = CategoryRepository().getCategories();
-  final _searchInputController = TextEditingController();
-
-  @override
-  void dispose() {
-    _searchInputController.dispose();
-    super.dispose();
+  /// Opens the address screen; it can pop with the address to deliver to.
+  Future<void> _openAddressScreen() async {
+    final address = await context.push<String>(AppRoutes.address);
+    if (address != null) setState(() => _deliveryAddress = address);
   }
 
   @override
@@ -44,25 +39,25 @@ class _HomeScreenState extends State<HomeScreen> {
           slivers: [
             HomeAppBar(
               deliveryAddress: _deliveryAddress,
-              savedAddresses: _savedAddresses,
-              onDeliveryAddressChanged: (address) =>
-                  setState(() => _deliveryAddress = address),
-              // TODO: push the add address screen
-              onAddAddressTap: () {},
-              // TODO: open the cart and the side menu
-              onBagTap: () {},
+              onDeliveryAddressTap: _openAddressScreen,
+              // TODO: open the side menu
               onMenuTap: () {},
             ),
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 20),
               sliver: SliverList.list(
                 children: [
-                  HomeSearchField(controller: _searchInputController),
+                  const HomeSearchField(),
                   _sectionGap,
                   // the carousel already adds the gutter
                   const PromoCarousel(promos: homePromos, horizontalPadding: 0),
                   _sectionGap,
-                  HomeCategories(categories: _categories),
+                  HomeCategories(
+                    categories: _categories,
+                    onCategoryTap: (category) => context.go(
+                      AppRoutes.menuWith(categoryId: category.id),
+                    ),
+                  ),
                   _sectionGap,
                   const HomeTopDiscounts(products: promoProducts),
                   _sectionGap,

@@ -17,6 +17,15 @@ class VoucherModel {
 
   bool get isAvailable => remaining > 0;
 
+  /// Amount taken off [subtotal]: a percentage for "20%", a flat amount for
+  /// "$10". Never more than the subtotal.
+  double discountOn(double subtotal) {
+    final value =
+        double.tryParse(discount.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0;
+    final off = discount.endsWith('%') ? subtotal * value / 100 : value;
+    return off.clamp(0, subtotal).toDouble();
+  }
+
   factory VoucherModel.fromJson(Map<String, dynamic> json) {
     return VoucherModel(
       id: json['id'].toString(),

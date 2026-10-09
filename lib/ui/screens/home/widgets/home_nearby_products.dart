@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:yummy/data/models/product_model.dart';
+import 'package:yummy/routing/route_path.dart';
 import 'package:yummy/ui/core/themes/app_colors.dart';
 import 'package:yummy/ui/core/widgets/product_image_tile.dart';
 import 'package:yummy/ui/screens/home/widgets/home_section_card.dart';
@@ -26,8 +28,11 @@ class _HomeNearbyProductsState extends State<HomeNearbyProducts> {
 
     return HomeSectionCard(
       title: 'Near you',
-      // TODO: open the filters
-      trailing: Icon(Icons.tune, color: context.colors.inputText, size: 28),
+      trailing: IconButton(
+        tooltip: 'Browse and filter the menu',
+        onPressed: () => context.go(AppRoutes.menu),
+        icon: Icon(Icons.tune, color: context.colors.inputText, size: 28),
+      ),
       child: ListView.separated(
         padding: const EdgeInsets.fromLTRB(10, 10, 10, 15),
         // sits inside the home scroll view: take the height of the items and
@@ -39,6 +44,8 @@ class _HomeNearbyProductsState extends State<HomeNearbyProducts> {
         itemBuilder: (_, index) => NearbyProductTile(
           product: products[index],
           backgroundColor: _tileColors[index % _tileColors.length],
+          onTap: () =>
+              context.push(AppRoutes.productDetail(products[index].id)),
         ),
       ),
     );

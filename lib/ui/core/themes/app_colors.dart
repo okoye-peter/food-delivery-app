@@ -26,6 +26,8 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.onTimerFill,
     required this.timerSeparator,
     required this.chevron,
+    required this.backButton,
+    required this.divider,
   });
 
   final Color headerBlue;
@@ -52,6 +54,9 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color onTimerFill;
   final Color timerSeparator;
   final Color chevron;
+  final Color backButton;
+  final Color divider;
+
 
   static const light = AppColors(
     headerBlue: Color(0x4D7ABEEB),
@@ -78,6 +83,8 @@ class AppColors extends ThemeExtension<AppColors> {
     onTimerFill: Colors.white,
     timerSeparator: Color(0xFF313337),
     chevron: Color(0xFFA4A7AD),
+    backButton: Color(0xFFFEA159),
+    divider: Color(0xFFDADADA),
   );
 
   static const dark = AppColors(
@@ -110,6 +117,8 @@ class AppColors extends ThemeExtension<AppColors> {
     onTimerFill: Color(0xFF313337),
     timerSeparator: Color(0xFFA4A7AD),
     chevron: Color(0xFF70747C),
+    backButton: Color(0xFFF9FAFB),
+     divider: Color(0xFF45484E),
   );
 
   @override
@@ -138,6 +147,8 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? onTimerFill,
     Color? timerSeparator,
     Color? chevron,
+    Color? backButton,
+    Color? divider,
   }) => AppColors(
     headerBlue: headerBlue ?? this.headerBlue,
     headerYellow: headerYellow ?? this.headerYellow,
@@ -163,6 +174,8 @@ class AppColors extends ThemeExtension<AppColors> {
     onTimerFill: onTimerFill ?? this.onTimerFill,
     timerSeparator: timerSeparator ?? this.timerSeparator,
     chevron: chevron ?? this.chevron,
+    backButton: backButton ?? this.backButton,
+    divider: divider ?? this.divider,
   );
 
   @override
@@ -193,6 +206,8 @@ class AppColors extends ThemeExtension<AppColors> {
       onTimerFill: Color.lerp(onTimerFill, other.onTimerFill, t)!,
       timerSeparator: Color.lerp(timerSeparator, other.timerSeparator, t)!,
       chevron: Color.lerp(chevron, other.chevron, t)!,
+      backButton: Color.lerp(backButton, other.backButton, t)!,
+      divider: Color.lerp(divider, other.divider, t)!,
     );
   }
 }

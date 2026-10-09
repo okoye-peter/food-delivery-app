@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 /// Product picture on a rounded coloured background.
 ///
-/// The image is capped at [imageWidth] and fixed at [imageHeight]; wide
-/// images shrink to fit (contain) and stay centred.
+/// The image sits in a fixed [imageWidth] x [imageHeight] box, so tiles line
+/// up; images that don't match that ratio shrink to fit (contain) and stay
+/// centred.
 class ProductImageTile extends StatelessWidget {
   const ProductImageTile({
     super.key,
@@ -24,12 +25,17 @@ class ProductImageTile extends StatelessWidget {
     Color(0xFFB5DE8C), // green
   ];
 
+  /// Fixed fill for a product, so it keeps the same colour on every screen.
+  static Color colorFor(String productId) =>
+      backgroundColors[productId.codeUnits.fold(0, (sum, unit) => sum + unit) %
+          backgroundColors.length];
+
   /// Asset path of the product image.
   final String image;
   final Color backgroundColor;
 
-  /// Maximum image width. The dummy images are 620px wide, so they must be
-  /// sized explicitly.
+  /// Image box width. The dummy images are 620px wide, so they must be sized
+  /// explicitly.
   final double imageWidth;
   final double imageHeight;
 
@@ -41,9 +47,12 @@ class ProductImageTile extends StatelessWidget {
         color: backgroundColor,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: imageWidth),
-        child: Image.asset(image, height: imageHeight, fit: BoxFit.contain),
+      // fixed box so every tile is the same size whatever the image's aspect
+      // ratio
+      child: SizedBox(
+        width: imageWidth,
+        height: imageHeight,
+        child: Image.asset(image, fit: BoxFit.contain),
       ),
     );
   }

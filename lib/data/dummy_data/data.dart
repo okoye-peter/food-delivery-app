@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:yummy/data/models/cart_item_model.dart';
 import 'package:yummy/data/models/category_model.dart';
+import 'package:yummy/data/models/order_model.dart';
 import 'package:yummy/data/models/product_model.dart';
 import 'package:yummy/data/models/voucher_model.dart';
 
@@ -408,3 +410,86 @@ const vouchers = [
     remaining: 0,
   ),
 ];
+
+/// Every meal the menu shows: the full-price catalogue, with the promo
+/// version swapped in for meals that are on discount.
+final catalogProducts = [
+  for (final product in products)
+    promoProducts.where((p) => p.name == product.name).firstOrNull ?? product,
+];
+
+/// One order on its way and two delivered ones (one rated, one not), dated
+/// relative to [now] so they always look recent.
+List<OrderModel> buildDummyOrders(DateTime now) {
+  final onTheWayPlaced = now.subtract(const Duration(minutes: 18));
+  final yesterday = now.subtract(const Duration(days: 1, hours: 2));
+  final lastWeek = now.subtract(const Duration(days: 5, hours: 4));
+
+  return [
+    OrderModel(
+      id: 'YM1048',
+      items: [
+        CartItemModel(product: promoProducts[3], quantity: 2),
+        CartItemModel(product: promoProducts[4], quantity: 1),
+      ],
+      deliveryAddress: '92 Hang Trong',
+      paymentMethod: PaymentMethod.card,
+      placedAt: onTheWayPlaced,
+      status: OrderStatus.onTheWay,
+      statusTimes: {
+        OrderStatus.placed: onTheWayPlaced,
+        OrderStatus.preparing: onTheWayPlaced.add(const Duration(minutes: 3)),
+        OrderStatus.onTheWay: onTheWayPlaced.add(const Duration(minutes: 14)),
+      },
+      deliveryFee: 2,
+      riderName: 'Tunde Bakare',
+      riderPhone: '+234 801 234 5678',
+    ),
+    OrderModel(
+      id: 'YM1043',
+      items: [
+        CartItemModel(product: promoProducts[1], quantity: 2),
+        CartItemModel(product: products[7], quantity: 2),
+        CartItemModel(product: promoProducts[2], quantity: 1),
+      ],
+      deliveryAddress: 'Floral JSC',
+      paymentMethod: PaymentMethod.cash,
+      placedAt: yesterday,
+      status: OrderStatus.delivered,
+      statusTimes: {
+        OrderStatus.placed: yesterday,
+        OrderStatus.preparing: yesterday.add(const Duration(minutes: 2)),
+        OrderStatus.onTheWay: yesterday.add(const Duration(minutes: 15)),
+        OrderStatus.delivered: yesterday.add(const Duration(minutes: 31)),
+      },
+      deliveryFee: 2,
+      discount: 5,
+      voucherCode: 'YUMMYCODE',
+      riderName: 'Chidi Okafor',
+    ),
+    OrderModel(
+      id: 'YM1037',
+      items: [
+        CartItemModel(product: nearbyProducts[2], quantity: 1),
+        CartItemModel(product: products[15], quantity: 2),
+      ],
+      deliveryAddress: '92 Hang Trong',
+      paymentMethod: PaymentMethod.wallet,
+      placedAt: lastWeek,
+      status: OrderStatus.delivered,
+      statusTimes: {
+        OrderStatus.placed: lastWeek,
+        OrderStatus.preparing: lastWeek.add(const Duration(minutes: 4)),
+        OrderStatus.onTheWay: lastWeek.add(const Duration(minutes: 20)),
+        OrderStatus.delivered: lastWeek.add(const Duration(minutes: 38)),
+      },
+      deliveryFee: 2,
+      riderName: 'Tunde Bakare',
+      rating: const OrderRating(
+        stars: 5,
+        tags: ['Tasty', 'Hot & fresh'],
+        comment: 'Best egusi in town, will order again.',
+      ),
+    ),
+  ];
+}

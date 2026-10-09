@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:yummy/data/models/product_model.dart';
+import 'package:yummy/routing/route_path.dart';
 import 'package:yummy/ui/core/themes/app_colors.dart';
 import 'package:yummy/ui/core/widgets/product_image_tile.dart';
 import 'package:yummy/ui/screens/home/widgets/home_section_card.dart';
@@ -51,7 +53,11 @@ class _HomeTopDiscountsState extends State<HomeTopDiscounts> {
         ],
       ),
       subtitle: '\$10 off orders from \$50',
-      trailing: const HomeSectionChevron(),
+      trailing: IconButton(
+        tooltip: 'See all deals',
+        onPressed: () => context.go(AppRoutes.menuWith(deals: true)),
+        icon: const HomeSectionChevron(),
+      ),
       // A horizontal list needs a fixed height
       child: Padding(
         padding: const EdgeInsets.only(top: 20, left: 10),
@@ -60,7 +66,11 @@ class _HomeTopDiscountsState extends State<HomeTopDiscounts> {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.only(top: 10, left: 5),
-            itemBuilder: (_, index) => SizedBox(
+            itemBuilder: (_, index) => GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () =>
+                  context.push(AppRoutes.productDetail(promos[index].id)),
+              child: SizedBox(
               width: 150,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,6 +145,7 @@ class _HomeTopDiscountsState extends State<HomeTopDiscounts> {
                   ),
                 ],
               ),
+            ),
             ),
             separatorBuilder: (_, _) => const SizedBox(width: 15),
             itemCount: promos.length,

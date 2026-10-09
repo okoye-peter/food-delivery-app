@@ -2,27 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:yummy/ui/core/themes/app_colors.dart';
+import 'package:yummy/ui/core/widgets/cart_button.dart';
 
-/// Home header: "Delivery to" address dropdown on the left, bag and menu
+/// Home header: tappable "Delivery to" address on the left, bag and menu
 /// buttons on the right. Must be placed inside a [CustomScrollView].
 class HomeAppBar extends StatelessWidget {
   const HomeAppBar({
     super.key,
     required this.deliveryAddress,
-    required this.savedAddresses,
-    required this.onDeliveryAddressChanged,
-    this.onAddAddressTap,
-    this.onBagTap,
+    required this.onDeliveryAddressTap,
     this.onMenuTap,
   });
 
   final String deliveryAddress;
-  final List<String> savedAddresses;
-  final ValueChanged<String> onDeliveryAddressChanged;
-
-  /// Shows an "Add new address" item at the bottom of the dropdown when set.
-  final VoidCallback? onAddAddressTap;
-  final VoidCallback? onBagTap;
+  final VoidCallback onDeliveryAddressTap;
   final VoidCallback? onMenuTap;
 
   @override
@@ -39,46 +32,10 @@ class HomeAppBar extends StatelessWidget {
       titleSpacing: 12,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       surfaceTintColor: Colors.transparent,
-      title: MenuAnchor(
-        alignmentOffset: const Offset(0, 8),
-        menuChildren: [
-          for (final address in savedAddresses)
-            MenuItemButton(
-              leadingIcon: Icon(
-                Icons.location_on_outlined,
-                color: context.colors.inputText,
-              ),
-              trailingIcon: address == deliveryAddress
-                  ? Icon(
-                      Icons.check,
-                      color: Theme.of(context).colorScheme.primary,
-                    )
-                  : null,
-              onPressed: () => onDeliveryAddressChanged(address),
-              child: Text(
-                address,
-                style: GoogleFonts.inter(color: context.colors.inputText),
-              ),
-            ),
-          if (onAddAddressTap != null) ...[
-            const Divider(height: 1),
-            MenuItemButton(
-              leadingIcon: Icon(Icons.add, color: context.colors.link),
-              onPressed: onAddAddressTap,
-              child: Text(
-                'Add new address',
-                style: GoogleFonts.inter(color: context.colors.link),
-              ),
-            ),
-          ],
-        ],
-        builder: (_, controller, child) => GestureDetector(
-          // opaque: the gaps between icon and text are tappable too
-          behavior: HitTestBehavior.opaque,
-          onTap: () =>
-              controller.isOpen ? controller.close() : controller.open(),
-          child: child,
-        ),
+      title: GestureDetector(
+        // opaque: the gaps between icon and text are tappable too
+        behavior: HitTestBehavior.opaque,
+        onTap: onDeliveryAddressTap,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
@@ -128,14 +85,7 @@ class HomeAppBar extends StatelessWidget {
         ),
       ),
       actions: [
-        IconButton(
-          onPressed: onBagTap,
-          icon: SvgPicture.asset(
-            'assets/svg/dashboard/bag.svg',
-            width: 24,
-            colorFilter: iconColorFilter,
-          ),
-        ),
+        const CartButton(),
         IconButton(
           onPressed: onMenuTap,
           icon: SvgPicture.asset(

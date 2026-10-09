@@ -6,9 +6,14 @@ import 'package:yummy/ui/core/themes/app_colors.dart';
 /// Horizontal row of food categories, each a gradient circle with its
 /// logo and name underneath.
 class HomeCategories extends StatelessWidget {
-  const HomeCategories({super.key, required this.categories});
+  const HomeCategories({
+    super.key,
+    required this.categories,
+    required this.onCategoryTap,
+  });
 
   final List<CategoryModel> categories;
+  final ValueChanged<CategoryModel> onCategoryTap;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +23,9 @@ class HomeCategories extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 24),
-        itemBuilder: (BuildContext context, int index) => SizedBox(
+        itemBuilder: (BuildContext context, int index) => GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => onCategoryTap(categories[index]),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
